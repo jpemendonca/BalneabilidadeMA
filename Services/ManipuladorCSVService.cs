@@ -37,6 +37,9 @@ namespace BalneabilidadeMA.Services
 
                         dados.EstaProprioParaBanho = dados.Condicao == "PRÓPRIO";
 
+                        dados.Latitude = ConvertDMSToDecimal(dados.Coordenada.Split(" ")[0]);
+                        dados.Longitude = ConvertDMSToDecimal(dados.Coordenada.Split(" ")[1]);
+
                         retorno.Add(dados);
                     }
                 }
@@ -47,6 +50,38 @@ namespace BalneabilidadeMA.Services
 			{
                 throw new Exception("Erro ao buscar dados da tabela extraída: " + ex.Message, ex);
             }
+        }
+
+        public static double ConvertDMSToDecimal(string dms)
+        {
+            // Remover caracteres especiais (º, ’, ”) para facilitar a conversão
+            dms = dms.Replace("º", " ")
+                     .Replace("’", " ")
+                     .Replace("”", " ")
+                     .Trim();
+
+            // Separar os valores de graus, minutos, segundos e direção
+            string[] dmsParts = dms.Split(' ');
+            double degrees = double.Parse(dmsParts[0], CultureInfo.InvariantCulture);
+            double minutes = double.Parse(dmsParts[1], CultureInfo.InvariantCulture);
+            double seconds = double.Parse(dmsParts[2], CultureInfo.InvariantCulture);
+            char direction = dmsParts[3][0]; // 'S', 'N', 'O' ou 'E'
+
+            // Calcular a conversão para graus decimais
+            double decimalDegrees = degrees + (minutes / 60.0) + (0 / 3600.0);
+
+            // Inverter o sinal se for sul ou oeste
+            if (direction == 'S' || direction == 'O')
+            {
+                decimalDegrees *= -1;
+            }
+
+            return decimalDegrees;
+        }
+
+        public static double TruncarParaQuatroDecimais(double valor)
+        {
+            return Math.Truncate(valor * 10000) / 10000;
         }
     }
 }

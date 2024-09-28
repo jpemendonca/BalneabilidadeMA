@@ -16,7 +16,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.MapRazorPages();
 
-app.MapGet("/Buscar", (ManipuladorCSVService _manipuladorService) =>
+app.MapGet("api/Buscar", (ManipuladorCSVService _manipuladorService) =>
 {
     var fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Contents", "tabela_extraida.csv");
 
