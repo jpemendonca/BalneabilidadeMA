@@ -1,5 +1,6 @@
 ﻿using BalneabilidadeMA.Models;
 using Dapper;
+using Microsoft.Data.Sqlite;
 using Npgsql;
 
 namespace BalneabilidadeMA.Services
@@ -34,13 +35,27 @@ namespace BalneabilidadeMA.Services
 
         public List<DadosBalneabilidade> ListarDados()
         {
-            using (var connection = new NpgsqlConnection(_connectionString))
+            try
             {
-                connection.Open();
+                using (var connection = new SqliteConnection(_connectionString))
+                {
+                    connection.Open();
 
-                var query = "SELECT * FROM DadosBalneabilidade";
-                return connection.Query<DadosBalneabilidade>(query).DistinctBy(x => x.Ponto).ToList();
+                    var query = "SELECT * FROM DadosBalneabilidade";
+                    var dados = connection.Query<DadosBalneabilidade>(query).ToList();
+
+                    // Filtrar duplicatas pela propriedade Ponto
+                    var dadosDistintos = dados.GroupBy(x => x.Ponto).Select(g => g.First()).ToList();
+
+                    return dadosDistintos;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Tratar exceção (log, rethrow ou retornar erro)
+                throw new Exception("Erro ao listar dados: " + ex.Message);
             }
         }
+
     }
 }

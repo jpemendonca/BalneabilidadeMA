@@ -2,7 +2,7 @@
 {
     public class DadosBalneabilidade
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Ponto { get; set; }
 
         public string Coordenada { get; set; }
