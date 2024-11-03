@@ -35,7 +35,7 @@
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
-            map.locate({ setView: true, maxZoom: 16 });
+            map.locate({ setView: true, maxZoom: 14 });
 
             map.on('locationfound', function (e) {
                 var radius = Math.min(e.accuracy / 2, 300);

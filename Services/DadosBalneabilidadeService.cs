@@ -1,7 +1,6 @@
 ﻿using BalneabilidadeMA.Models;
 using Dapper;
 using Microsoft.Data.Sqlite;
-using Npgsql;
 
 namespace BalneabilidadeMA.Services
 {
@@ -14,22 +13,6 @@ namespace BalneabilidadeMA.Services
             if (configuration is not null)
             {
                 _connectionString = configuration.GetConnectionString("DefaultConnection");
-            }
-        }
-
-        public void InserirDados(DadosBalneabilidade dados)
-        {
-            using (var connection = new NpgsqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                var query = @"
-                INSERT INTO DadosBalneabilidade
-                (Id, Ponto, Coordenada, Latitude, Longitude, Localizacao, Referencia, Condicao, EstaProprioParaBanho, Data)
-                VALUES
-                (@Id, @Ponto, @Coordenada, @Latitude, @Longitude, @Localizacao, @Referencia, @Condicao, @EstaProprioParaBanho, @Data)";
-
-                connection.Execute(query, dados);
             }
         }
 
