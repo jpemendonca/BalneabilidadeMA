@@ -39,6 +39,5 @@ namespace BalneabilidadeMA.Services
                 throw new Exception("Erro ao listar dados: " + ex.Message);
             }
         }
-
     }
 }
